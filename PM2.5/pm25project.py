@@ -58,7 +58,7 @@
 # 
 # **答案**：
 # 
-# **第一个问题：**2010年-2015年北京市PM 2.5数据在不同季节有什么变化趋势？
+# **第一个问题：**2012年-2015年北京市PM 2.5数据在不同季节有什么变化趋势？
 # 
 # **第二个问题：**2015年不同城市PM2.5含量每月变化趋势是否一致？
 
@@ -82,7 +82,7 @@
 
 # > **小贴士**: 下面是代码框(code cell). 运行代码框的方法与编辑上方的 Markdown 框的格式类似，你只需点击代码框，按下键盘快捷键 **Shift** + **Enter** 或 **Shift** + **Return** ，或者你也可先选择代码框，然后点击工具栏的 **运行** 按钮来运行代码。运行代码框时，相应单元左侧的信息会出现星号，即 `In [*]:`，若代码执行完毕，星号则会变为某个数字，如 `In [1]`。如果代码运行后有输出结果，输出将会以 `Out [1]:` 的形式出现，其中的数字将与 "In" 中的数字相对应。如果代码运行后没有输出结果，则不会有`Out [1]`出现。
 
-# In[1]:
+# In[2]:
 
 
 import csv
@@ -95,13 +95,13 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 # 以上海数据为例，我们先使用Pandas的read_csv函数导入第一个数据集，并使用head、info、describe方法来查看数据中的基本信息。
 
-# In[2]:
+# In[3]:
 
 
 Shanghai_data = pd.read_csv('ShanghaiPM20100101_20151231.csv')
 
 
-# In[3]:
+# In[4]:
 
 
 Shanghai_data.head()
@@ -111,7 +111,7 @@ Shanghai_data.head()
 # 
 # 接下来我们可以查看一下数据的缺失情况，以及数据的类型：
 
-# In[4]:
+# In[5]:
 
 
 Shanghai_data.info()
@@ -119,7 +119,7 @@ Shanghai_data.info()
 
 # 通过数据中的打印，我们可以看出本数据中包含有整型(int)、浮点型(float)、字符串型(str)等数据的格式。
 
-# In[5]:
+# In[6]:
 
 
 # print type of python object
@@ -128,7 +128,7 @@ print(type(Shanghai_data['cbwd'][0]))
 
 # 变量名`PM_US Post`中包含空格，这也可能对我们后续的分析造成一定的困扰。因为大多数命令中，都是默认以空格做为值与值之间的分隔符，而不是做为文件名的一部分。因此我们需要将变量名中的空格改为下划线:
 
-# In[6]:
+# In[7]:
 
 
 Shanghai_data.columns = [c.replace(' ', '_') for c in Shanghai_data.columns]
@@ -137,7 +137,7 @@ Shanghai_data.head()
 
 # 其中season的数据类型为int，但实际上season并不是一个数字，而是一个分类变量，我们可以将season中的数值1,2,3,4转换为对应的季节（可以使用Pandas的map方法来实现）：
 
-# In[7]:
+# In[8]:
 
 
 Shanghai_data['season'] = Shanghai_data['season'].map({1:'Spring', 2:'Summer', 3:'Autumn', 4: 'Winter'})
@@ -148,7 +148,7 @@ Shanghai_data.head()
 # 
 # 说明：下面代码中用到的`dropna()`函数能够删除掉数据中的缺失值。
 
-# In[8]:
+# In[9]:
 
 
 # print the length of data
@@ -161,20 +161,20 @@ print("There number of missing data records in PM_Jingan is: ",
 
 # 请选择一个你感兴趣的城市数据集，对你的数据进行类似于上方的评估，并回答下面的问题，说明你观察到的信息：
 
-# In[9]:
+# In[10]:
 
 
 # TO DO: fill in blanks below to load the city's data
 city_data = pd.read_csv('BeijingPM20100101_20151231.csv')
 
 
-# In[10]:
+# In[11]:
 
 
 city_data.head()
 
 
-# In[11]:
+# In[12]:
 
 
 city_data.info()
@@ -186,6 +186,10 @@ city_data.info()
 # 
 # **问题2b**: 你选择的城市数据中的哪些列存在缺失值？缺失值的数量分别是多少？
 # 
+#     ```
+#     city_data.isnull().sum()
+#     ```
+#     
 # **答案**：
 # 
 # There number of missing data records in PM_Dongsi is 27532
@@ -222,7 +226,7 @@ city_data.info()
 # 
 # 
 
-# In[12]:
+# In[13]:
 
 
 files = ['BeijingPM20100101_20151231.csv',
@@ -234,14 +238,14 @@ files = ['BeijingPM20100101_20151231.csv',
 out_columns = ['No', 'year', 'month', 'day', 'hour', 'season', 'PM_US Post']
 
 
-# In[13]:
+# In[14]:
 
 
 # create a void dataframe
 df_all_cities = pd.DataFrame()
 
 
-# In[14]:
+# In[15]:
 
 
 # iterate to write diffrent files
@@ -256,7 +260,7 @@ for inx, val in enumerate(files):
     df_all_cities = df_all_cities.append(df)
 
 
-# In[15]:
+# In[16]:
 
 
 # replace the space in variable names with '_'
@@ -265,7 +269,7 @@ df_all_cities.columns = [c.replace(' ', '_') for c in df_all_cities.columns]
 
 # 我们来简单查看一下处理后的数据，观察数据是否符合我们的要求：
 
-# In[16]:
+# In[17]:
 
 
 df_all_cities.head()
@@ -277,7 +281,7 @@ df_all_cities.head()
 # 
 # `df_all_cities`是我们建立的一个包含所有数据的Pandas Dataframe，考虑到我们的分析目标，我们可能会需要提取部分数据来针对我们感兴趣的具体问题进行分析。为了方便大家对数据进行探索，在下面我们定义了一个`filter_data`和`reading_stats`的函数，通过输入不同的条件(conditions),该函数可以帮助我们筛选出这部分的数据。
 
-# In[17]:
+# In[18]:
 
 
 def filter_data(data, condition):
@@ -326,7 +330,7 @@ def filter_data(data, condition):
     return data
 
 
-# In[18]:
+# In[19]:
 
 
 def reading_stats(data, filters = [], verbose = True):
@@ -377,13 +381,13 @@ def reading_stats(data, filters = [], verbose = True):
 
 # 下面我们会使用上海市2012年-2015年的数据进行举例，探索数据中的一些问题。要获取这部分的数据，我们可以使用下面的函数来实现。
 
-# In[19]:
+# In[20]:
 
 
 df_test = reading_stats(df_all_cities, ["city == 'Shanghai'", "year >= 2012"])
 
 
-# In[20]:
+# In[21]:
 
 
 df_test.info()
@@ -413,14 +417,14 @@ df_test.info()
 # 
 # 
 
-# In[21]:
+# In[30]:
 
 
 # TO DO: First question
 df1 = reading_stats(df_all_cities, ["city == 'Beijing'", "year >= 2012"])
 
 
-# In[31]:
+# In[23]:
 
 
 # TO DO: Second question
@@ -451,7 +455,7 @@ df2 = reading_stats(df_all_cities, ["year == 2015"])
 # 
 # 
 
-# In[23]:
+# In[24]:
 
 
 def univariate_plot(data, key = '', color = 'blue'):
@@ -476,7 +480,7 @@ def univariate_plot(data, key = '', color = 'blue'):
 
 # 我们以上海市2012年之后不同月份的PM 2.5的观测平均值为例，使用`univariate_plot`函数绘制了可视化：
 
-# In[24]:
+# In[25]:
 
 
 univariate_plot(df_test, 'month', 'grey')
@@ -486,11 +490,11 @@ univariate_plot(df_test, 'month', 'grey')
 
 # 接下来，你可以对你提出的问题进行探索了！请使用上面的函数探索一些不同的变量，并记录你发现的一些趋势。如果你想用其他方式或多个方式探索数据集，可自行创建更多的单元格。
 
-# In[27]:
+# In[31]:
 
 
 # TO DO: 
-univariate_plot(df1, 'season', 'yellow')
+univariate_plot(df1, 'season', 'steelblue')
 
 
 # **问题 4a**：上述可视化有何有趣的趋势？是否能够回答你的第一个问题？（如果不能，请说明你需要什么信息来帮助你来回答问题）
@@ -498,7 +502,7 @@ univariate_plot(df1, 'season', 'yellow')
 # **答案**：
 # 2012年到2015年的北京市PM2.5数据显示，夏季PM2.5较低，冬季PM2.5指数最高，春秋两季PM2.5指数在夏季与冬季之间，且二者相当。
 
-# In[60]:
+# In[27]:
 
 
 # TO DO: 
@@ -517,7 +521,7 @@ plt.legend(cities)
 plt.show()
 
 
-# In[95]:
+# In[32]:
 
 
 fig, ax = plt.subplots() 
@@ -543,6 +547,20 @@ ax.set_xticks(index - 5*bar_width / 2)
 ax.set_xticklabels(tickle_list) 
 plt.legend(cities)
 plt.show()
+
+
+# In[39]:
+
+
+# a simple form
+df_all_cities.groupby(["month","city"]).PM_US_Post.mean().unstack().plot(kind = "bar")
+
+
+# In[40]:
+
+
+# a better choice
+df_all_cities.groupby(["month","city"]).PM_US_Post.mean().unstack().plot(kind = "line")
 
 
 # **问题 4b**：上述可视化有何有趣的趋势？是否能够回答你的第二个问题？（如果不能，请说明你需要什么信息来帮助你来回答问题）
