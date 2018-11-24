@@ -52,6 +52,14 @@
 # 
 # > **小贴士**: 像这样的引用部分旨在为学员提供实用指导，帮助学员了解并使用 Jupyter notebook
 
+# ## 修改
+# - 加入语句让df.info()中间部分数据不被隐藏
+# - 完善图表信息
+# - 使用att_win.add(dff_win,fill_value = 0)语句简化统计过程
+# - 使用plt.axis("equal")调整饼状图结构
+# - 使用totalForce = attForce.add(defForce,fill_value = 0)语句
+# - 使用box chart 对离散变量与连续变量进行可视化
+
 # ## 提出问题
 # 
 # 在此项目中，你将以一名数据分析师的身份执行数据的探索性分析。你将了解数据分析过程的基本流程。在你分析数据之前，请先思考几个你需要理解的关于这些战斗的问题，例如，哪一个区域发生了最多的战争？哪一个国王获得了最多的胜利？战争的胜利与否受那些关键因素的影响？
@@ -112,6 +120,8 @@ df = pd.read_csv('battles.csv')
 
 # TO DO: check the dataset general info
 df.info()
+# Tip1: not hide information in head()
+pd.set_option('display.max_columns', None)
 df.head()
 
 
@@ -182,14 +192,23 @@ df_attOrDefF.dropna(axis = 0, how='any', subset = ['attacker_outcome'], inplace 
 # Question1: Which region has the most wars
 # Data: df
 # Plot: pie chart or bar chart
-df_regionBat = df.groupby('region').sum()
+#df_regionBat = df.groupby('region').sum()
 # Answer for Q1:
-region = df_regionBat['battle_number'].idxmax()
-print('Region with most battle number is: %s' % region)
+#region = df_regionBat['battle_number'].idxmax()
+#print('Region with most battle number is: %s' % region)
 # Visualization for Q1:
-df_regionBat['battle_number'].plot(kind = 'bar')
+#df_regionBat['battle_number'].plot(kind = 'bar')
+#plt.figure()
+#df_regionBat['battle_number'].plot(kind = 'pie')
+
+# Fix1: mis understand of battle_number
+# set different color can make chart more straight
+print('Region with most battle number is: %s' % df.region.value_counts().idxmax())
 plt.figure()
-df_regionBat['battle_number'].plot(kind = 'pie')
+df.region.value_counts().plot(kind='bar', color = ["r","gray","gray","gray","gray","gray","gray","gray"])
+plt.title('Region - number of wars')
+plt.xlabel('battle name')
+plt.ylabel('number of battles')
 
 
 # **问题1分析**：
@@ -200,7 +219,7 @@ df_regionBat['battle_number'].plot(kind = 'pie')
 # 
 # 需要每位国王对应的战斗胜利数
 
-# In[5]:
+# In[6]:
 
 
 # Question2: Which king had won the most battles
@@ -210,13 +229,15 @@ df_regionBat['battle_number'].plot(kind = 'pie')
 attacker_win = df_attAndDefKing.groupby('attacker_king')['attacker_outcome'].sum()
 defender_win = -df_attAndDefKing.groupby('defender_king')['attacker_outcome'].sum()
 # Make sure they use same index
-attacker_win = attacker_win.reindex(defender_win.index).fillna(0)
-total_win = attacker_win + defender_win
+total_win = attacker_win.add(defender_win,fill_value = 0)
 # Answer for Q2:
 print("King %s has won the most wars" % total_win.idxmax())
 # Visualization for Q2:
 # Since there are negative numbers, bar chart will be a better choice
 total_win.plot(kind = 'bar')
+plt.title('king - win of wars')
+plt.xlabel('King')
+plt.ylabel('Win of wars')
 
 
 # **问题2分析**：
@@ -227,7 +248,7 @@ total_win.plot(kind = 'bar')
 # 
 # 需要attacker_king的数据，统计battle数，不考虑battle_number
 
-# In[6]:
+# In[7]:
 
 
 # Question3: Which king had launch most attack
@@ -238,8 +259,13 @@ attKing_Batt = df_attKing['attacker_king'].value_counts()
 print('King %s has launched the most attack' % attKing_Batt.idxmax())
 # Visualization for Q3:
 attKing_Batt.plot(kind = 'bar')
+plt.title('King - number of attacks')
+plt.xlabel('King')
+plt.ylabel('number of attacks')
 plt.figure()
 attKing_Batt.plot(kind = 'pie')
+plt.axis("equal")
+plt.title('King - number of attacks')
 
 
 # **问题3分析**：
@@ -258,14 +284,19 @@ attKing_Batt.plot(kind = 'pie')
 # Plot: pie chart or bar chart
 attForce = df_attAndDefF.groupby('name')['attacker_size'].sum()
 defForce = df_attAndDefF.groupby('name')['defender_size'].sum()
-totalForce = attForce + defForce
+totalForce = attForce.add(defForce,fill_value = 0)
 
 # Answer for Q4:
 print(' %s has the most people involed' % totalForce.idxmax())
 # Visualization for Q4:
 totalForce.plot(kind = 'bar')
+plt.title('Size of battle')
+plt.xlabel('battle name')
+plt.ylabel('size of battle')
 plt.figure()
 totalForce.plot(kind = 'pie')
+plt.title('Size of battle')
+plt.axis("equal")
 
 
 # **问题4分析**：
@@ -276,7 +307,7 @@ totalForce.plot(kind = 'pie')
 # 
 # 求出进攻人数占比，用散点图进行探究
 
-# In[14]:
+# In[10]:
 
 
 # Question4: Which is the most fierce battle
@@ -287,16 +318,28 @@ defForce = df_attOrDefF['defender_size']
 totalForce = attForce + defForce
 percentForce = attForce/totalForce
 # Visualization
-plt.figure()
-plt.scatter(percentForce, df_attOrDefF['attacker_outcome'], marker = 'o')
-ax = plt.gca()
-ax.spines['right'].set_color('none')
-ax.spines['top'].set_color('none')
-ax.xaxis.set_ticks_position('bottom')
-ax.spines['bottom'].set_position(('data', 0))
-plt.xlabel('Percent of attack force')
-plt.ylabel('Attacker outcome')
-plt.yticks([-1, 1], ['$loss$', '$win$'])
+#plt.figure()
+#plt.scatter(percentForce, df_attOrDefF['attacker_outcome'], marker = 'o')
+#ax = plt.gca()
+#ax.spines['right'].set_color('none')
+#ax.spines['top'].set_color('none')
+#ax.xaxis.set_ticks_position('bottom')
+#ax.spines['bottom'].set_position(('data', 0))
+#plt.xlabel('Percent of attack force')
+#plt.ylabel('Attacker outcome')
+#plt.yticks([-1, 1], ['$loss$', '$win$'])
+
+# When you have a discrete variable and a continuous variable, use box chart.
+import seaborn as sns
+import numpy as np
+
+sns.boxplot(x = df_attOrDefF['attacker_outcome'],y = percentForce)
+
+# Option of scatter
+sns.set(style="darkgrid")
+sns.lmplot(x='attacker_size', y='defender_size', hue = 'attacker_outcome',data = df,
+       fit_reg=False)
+plt.show()
 
 
 # **问题5分析**：
