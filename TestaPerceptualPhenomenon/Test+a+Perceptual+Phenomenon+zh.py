@@ -21,29 +21,29 @@
 
 # **假设：**
 # 
-# $A$: word与color匹配时所用的回答时间
+# $\mu_0$: 测试对象在Congruent测试时反应时间的总体均值
 # 
-# $B$: word与color不匹配时所用的回答时间
+# $\mu_1$: 测试对象在Incongruent测试时反应时间总体均值
 # 
-# $\mu_0$: $A$的平均数
+# $\mu$: $\mu_1 - \mu_0$
 # 
-# $\mu_1$: $B$的平均数
+# $H_0$: $\mu = 0$
 # 
-# $H_0$: $\mu_0$与$\mu_1$之间不存在显著性差别
-# 
-# $H_1$: $\mu_0$与$\mu_1$之间存在显著性差别
+# $H_1$: $\mu > 0$
 # 
 # **分析：**
 # 
-# 假设数据符合正态性假定与方差齐性假定，可以进行参数检验。（此处在后续处理中的正态性检验与方差齐性检验中体现）
+# 根据初步观察，有两组数据，每组数据数据量为24，且数据来源是对同一群人，进行两次不同的实验，属于相关样本。
 # 
-# 根据初步观察，有两组数据，每组数据数据量为24，属于小样本，因此执行T检验，确认在显著性水平$\alpha = 0.05$时是否接受$H_0$
+# 假设数据符合正态性假定与方差齐性假定，则可以进行参数检验。（后续处理中有QQ图进行正态性检验部分，由于样本是相关样本，因此省略方差齐性检验）
+# 
+# 根据上述条件以及备择假设，执行单侧配对T检验，确认在显著性水平$\alpha = 0.05$时是否接受$H_0$。
 
 # 现在轮到你自行尝试 Stroop 任务了。前往此链接，其中包含一个基于 Java 的小程序，专门用于执行 Stroop 任务。记录你收到的任务时间（你无需将时间提交到网站）。现在下载此数据集，其中包含一些任务参与者的结果。数据集的每行包含一名参与者的表现，第一个数字代表他们的一致任务结果，第二个数字代表不一致任务结果。
 # 
 # (3) 报告关于此数据集的一些描述性统计。包含至少一个集中趋势测量和至少一个变异测量。
 
-# In[1]:
+# In[7]:
 
 
 # 在这里执行你的分析
@@ -51,6 +51,7 @@
 import pandas as pd
 import scipy.stats as stats
 import matplotlib.pyplot as plt
+import math
 
 get_ipython().run_line_magic('matplotlib', 'inline')
 
@@ -75,7 +76,7 @@ print("std of Incongruent is %f" % df.Incongruent.std(ddof = 0))
 
 # (4) 提供显示样本数据分布的一个或两个可视化。用一两句话说明你从图中观察到的结果。
 
-# In[2]:
+# In[3]:
 
 
 # 在这里创建可视化图表
@@ -99,9 +100,9 @@ print("Correlation between Congruent and Incongruent is %f " % df['Congruent'].c
 
 # homogeneity test of variance
 # We use levene test
-args = [data_A, data_B]
-w, p = stats.levene(*args)
-print("levene-test between two data is %f " % p)
+#args = [data_A, data_B]
+#w, p = stats.levene(*args)
+#print("levene-test between two data is %f " % p)
 
 
 # --答案写这里--
@@ -114,19 +115,42 @@ print("levene-test between two data is %f " % p)
 
 # (5) 现在，执行统计测试并报告你的结果。你的置信水平和关键统计值是多少？你是否成功拒绝零假设？对试验任务得出一个结论。结果是否与你的期望一致？
 
-# In[3]:
+# In[27]:
 
 
 # 在这里执行统计检验
 # Now, we've done normally distribution test and homogeneity test of variance, we could do ttest
-stats.ttest_ind(data_A, data_B)
+data = data_B - data_A
+n = len(data)
+df = n - 1
+alpha = 0.05
+
+d_mu = data.mean()
+Std = data.std()
+Ste = 1/math.sqrt(n)*Std
+t_value = d_mu/math.sqrt(Std**2/n)
+# Check table to find t_value of significance alpha
+t_value_alpha = 1.714
+
+print("Significance value is set as: %f" % alpha)
+print("Mean of differences is: %f" % d_mu)
+print("Standard deviation of differences is: %f" % Std)
+print("Standard error of differences is: %f" % Ste)
+
+print("Degree of freedom is: %f" % df)
+print("t value is: %f" % t_value)
+print("t value when p=0.05 is: %f" % t_value_alpha)
+print("P value t_value > t_value_alpha, which means p value smaller than 0.05")
 
 
 # --答案写这里--
 # 
 # **结论：**
 # 
-# 我们使用了双总体独立样本$T$检验，从$T$检验我们可以看出$t$值为$-6.5323$，$p$值为$4.5949e-08$，因此在置信水平$0.05$的情况下，我们拒绝原假设$H_0$。因此认为$\mu_0$与$\mu_1$的差别具有显著性。即Congruent与Incongruent测验中测试者反应时间均值存在差别。
+# 我们使用了单侧配对配对$T$检验，从检验结果我们可以看出自由度为23，$t$值为$8.020707$,由于在自由度为23时查表表明p值小于0.0005，可以选择查找$p=0.05$，自由度23时的t值，为1.714，因此在显著性水平$0.05$的情况下，我们拒绝原假设$H_0$。
+# 
+# 由上述分析，认为备择假设$\mu>0$成立。
+# 
 
 # ### 对Q6的探索
 # 
