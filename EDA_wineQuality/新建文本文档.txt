@@ -1,0 +1,8 @@
+, next, we'll take a look at two group of variables: 
+- Group1: `free sulfur dioxide`, `total sulfur dioxide`, `sulphates` - Group2: `density`, `residual sugar` and `alcohol`
+
+**Group1**
+According to the txt file, these three variables are relate with SO2, which make me wonder if there any relation between them.
+```{r}
+
+```
