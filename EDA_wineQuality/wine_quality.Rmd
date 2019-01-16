@@ -26,26 +26,28 @@ This report explores a dataset containing quality and attributes for approximate
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
-wineQuality <- read.csv('data/wineQualityWhites.csv')
+wineQuality_raw <- read.csv('data/wineQualityWhites.csv')
 ```
 
 # Univariate Plots Section
 ```{r echo=FALSE, Univariate_Plots}
 # size of data
-dim(wineQuality)
+dim(wineQuality_raw)
 
 # get a general impression of data 
-str(wineQuality)
+str(wineQuality_raw)
 
 # use summary function to see some statistic information
-summary(wineQuality)
+summary(wineQuality_raw)
 ```
 
 this dataset consist of 13 variables and 4,898 observaions. Here we consider quality as a factor rather than a numeric variable.
 
 ```{r echo=FALSE, tidy}
 # delete X variable which seem useless
-wineQuality <- wineQuality[, (2:13)]
+#wineQuality <- wineQuality_raw[, (2:13)]
+# use subset and select = -c(column) instead
+wineQuality <- subset(wineQuality_raw, select = -c(X))
 # turn quality to factor
 wineQuality$quality <- factor(wineQuality$quality)
 ```
@@ -272,7 +274,7 @@ cor(wineQuality[, (1:11)])
 
 As we mentioned before, `free sulfur dioxide` is a part of `total sulfur dioxide`, however `sulphates` seems have no relation with them. As we expected, `density` influenced by `residual sugar` and `alcohol`, it also have moderate relation with `total sulfur dioxide`.
 
-```{r echo=FALSE, message=FALSE, ggpairs}
+```{r echo=FALSE, message=FALSE, fig.height=12, fig.width=12, ggpairs}
 # general impression between variables
 ggpairs(wineQuality)
 ```
@@ -317,7 +319,7 @@ ggplot(aes(x = residual.sugar, y = density),
 # omit outliers
 ggplot(aes(x = residual.sugar, y = density),
        data = wineQuality) +
-  geom_point() +
+  geom_point(alpha = 1/15) +
   xlim(0, quantile(wineQuality$residual.sugar, 0.99))
 
 # relation between density and alcohol
@@ -425,11 +427,11 @@ ggplot(aes(x = citric.acid, y = density),
 ggplot(aes(x = citric.acid, y = density),
        data = wineQuality) +
   geom_point(position = position_jitter(), aes(color = quality)) +
-  scale_fill_brewer(type = 'div') +
+  scale_color_brewer(type = 'div', palette = 'PuOr') +
   xlim(0, 1) +
-  ylim(0.99, 1.005)
+  ylim(0.99, 1.005) +
+  theme_dark()
 
-# citric.acid and density facet_wrap by quality
 ggplot(aes(x = citric.acid, y = density),
        data = wineQuality) +
   geom_point(position = position_jitter()) +
@@ -440,7 +442,7 @@ From this scatter plot, we can observe that wine with higher quality seems gathe
 
 ```{r echo=FALSE, warning=FALSE}
 # split the data
-parameter <- wineQuality[, 1:11]
+parameter <- subset(wineQuality, select = -c(quality))
 result <- wineQuality[, 12]
 
 # svm model
@@ -555,7 +557,10 @@ As for model 4, it uses all variables, but I still wonder if there any relation 
 ggplot(aes(x = citric.acid),
        data = wineQuality) +
   geom_histogram(aes(fill = quality), binwidth = 0.005) +
-  scale_fill_brewer(type = 'qual')
+  scale_fill_brewer(type = 'qual') +
+  labs(x = 'citric.acid (g / dm^3)',
+       y = 'count',
+       title = 'Distribution of citric.acid')
 ```
 
 ### Description One
@@ -567,7 +572,10 @@ We can observe that this distribution have peak around 0.49, and high quality wi
 ggplot(aes(x = quality, y = alcohol),
        data = wineQuality) +
   geom_boxplot() +
-  geom_point(stat = 'summary', fun.y = mean, pch = 4)
+  geom_point(stat = 'summary', fun.y = mean, pch = 4) +
+  labs(x = 'quality',
+       y = 'alcohol (% by volume)',
+       title = 'Boxplot of alcohol under different quality')
 ```
 
 ### Description Two
@@ -580,7 +588,10 @@ ggplot(aes(x = result, y = y4.after_tune, size = size),
        data = result_y4) +
   geom_point(aes(color = (result == y4.after_tune))) +
   scale_size_continuous(range = c(2, 15)) +
-  labs(color = 'True/False')
+  labs(color = 'True/False',
+       x = 'quality (real)',
+       y = 'quality (predict)',
+       title = 'Precision of prediction')
 ```
 
 ### Description Three
