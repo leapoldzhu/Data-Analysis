@@ -4,104 +4,192 @@
 
 The data contain 891 observations and 12 variables. I want to see if any factor is the main reason that will affect the survival rate.
 
-This dataset is from Kaggle. Here is my results' tableau link
-
-- [Titanic 0.0](https://public.tableau.com/profile/leo5217#!/vizhome/TITANIC-0_0/Story1?publish=yes)
-
-- [Titanic 1.0](https://public.tableau.com/profile/leo5217#!/vizhome/TITANIC_120/Story-fix?publish=yes)
+This dataset is from Kaggle. Here is my results' [tableau link](https://public.tableau.com/profile/leo5217#!/vizhome/TITANIC_120/Story_2-0_Review?publish=yes)
 
 ## Conclusion
 
-From this dataset, we could find that female have higher survive chance than male. From the plot, children seems most likely survive, then female also have a better chance to survive. Male however, may sacrifice their chance of live to make sure children and female survive, so they tend to have a lower survival rate. Elder have highest death rate, which may caused by inconvenient movement. 
+From the plot, children seems most likely survive, female also have a better chance to survive. Male however, may sacrifice their chance of live to make sure children and female survive, so they tend to have a lower survival rate. Elder have highest death rate, which may caused by inconvenient movement. From class reason, if you buy class 1 ticket rather than class 3 ticket, then you'll probably survive from the disaster, so, try to buy the best class ticket you can.
+
+Finally, if you are a children or female with class 1 ticket, you have highest chance to survive. If you are a male with class 3 ticket, you have to bet on your luck.
 
 ## Visualization Design
 
 First, I observe there are 342 people survived, I'd like to see if women and men have same rate to survive.
 
-### Sheet1
+PS: All survival rate is calculated in each group, e.g: class 1 survival rate is $\frac{number \; of \; class \; 1 \; survivor}{number \; of \; class \; 1\; passenger}$, not in all survivor, which seems a more reasonable choice for me.
 
-First, it's important to know how may male and female are there on the ship. I use histogram, which shows there're 314 female and 577 male on the ship. Next, I'll use histogram to see relation between survive number and sex.
+### Sex
 
-### sheet2
+- Type: Histogram
+- Reason: There're two distinct variables, use histogram can clearly see the difference between them.
+- Layout: It's a basic analyze, so take a smaller place in dashboard.
+- Legend: No legend.
 
-Using histogram, we see 109 male and 233 female survived.
+### Sex-Survived
 
-### Sheet3
+- Type: Histogram
+- Reason: There're two distinct variables, use histogram can clearly see the difference between them.
+- Layout: It's a basic analyze, so take a smaller place in dashboard.
+- Legend: No legend.
 
-From two plots before, it's time to use a pie chart to see survival rate passengers of different genders. It's obvious that female passengers have a higher survival rate than male passengers.
+### Survived(Sex)
 
----
-
-**Sheet3-fix**
-
-I fix the plot according to the reflection, choose to use bar chart to represent this relation, get a more clear effect.
-
----
-
-### Sheet4
-
-In this part, I dig into survived passengers, wonder which class did they come from. So, I draw a pie chart among survived passengers according to different class. There're three class on the ship, it seems female survivors are equally distributed among them, and male passengers come from class 2 have lowest rate among male survivors.
-
-### Sheet5
-
-This is a surviving rate plot according to class. In three class, class 1 seems have highest survival rate, then come class 2, class 3, as expected, has lowest survival rate. I think it may because that male bought more class 3 tickets than female.
+- Type: Pie chart
+- Reason: There're two different classes, male and female. We also want to see the survival rate in each class, so I chose pie chart.
+- Layout: It gives reader a total intuitive to survival rate, so take a bigger place in dashboard.
+- Legend: Orange - Survived; Blue - Not Survived
 
 ---
 
-**Sheet5-fix**
+**Survived(Sex)-fix**
 
-I fix the plot according to the reflection, choose to use bar chart to represent this relation, get a more clear effect.
-
----
-
-### Sheet6
-
-Base on assumption above, I draw the sheet 6 plot. From I can see that half passengers in class 1 is female, and in class 2 and class 3, there're more male passengers than female, which seems reasonable, female tend to travel with family, male may travel along.
-
-### Sheet7
-
-This plot reflect the relation between survival rate, sex and class. I think this plot  perfectly reflects the proportional relationship with area.
-
-### Sheet8
-
-Next, I wonder if baby, youth or elder have higher survival rate than adult. I plot the histogram of passengers age first.
-
-### Sheet9
-
-In this plot I plot the histogram of survived passengers' age, compare to last plot, we can see there's minor change with children under age 9 than youth and adult between 15 to 41.
-
-### Sheet10
-
-Based on above findings, I divide passengers into four groups:
-
-- children: 0 - 14
-- Youth: 14 - 20
-- Adult: 20 - 59
-- Elderly: above 59
-
-I plot the histogram under this group. I want to use pie chart to make it easier to see the survival rate in different age.
-
-### Sheet11
-
-Use pie chart we can clearly see children have highest survival rate, youth and adult have similar chance to survive, elderly, however, have lowest survival rate.
+- Type: Stacked Histogram
+- Reason: There're two distinct variables, and two states, use stacked histogram can clearly see the difference between them, much clear than pie chart.
+- Layout: It gives reader a total intuitive to survival rate, so take a bigger place in dashboard.
+- Legend: Orange - Survived; Blue - Not Survived
 
 ---
 
-**Sheet11-fix**
+**Survived(Sex)-Survival**
 
-I fix the plot according to the reflection, choose to use bar chart to represent this relation, get a more clear effect.
+- Type: Histogram
+- Reason: There're two distinct variables, and two states, which are complementary to each other. Use stacked histogram seems a little redundant.
+- Layout: It gives reader a total intuitive to survival rate, so take a bigger place in dashboard.
+- Legend: No legend.
+
+### Class-Survived(Sex)
+
+- Type: Pie chart
+
+- Reason: There're three distinct classes, which need a pie chart to show the proportion.
+
+- Layout: It's a inspire to following analyze, so take less space in the dashboard.
+
+- Legend: Brown - Class 3; Orange - Class 2; Beige - Class 1.
+
+### Class-Sex
+
+- Type: Stacked Histogram
+- Reason: There're three different classes, and two states (male and female). Use a stacked histogram can clearly represent difference of gender in different class.
+- Layout: It gives reader a intuitive to the relation between class and gender, it can be a reference. So take less space in dashboard.
+- Legend: Blue - Male; Orange - Female.
+
+### Class-Survived
+
+- Type: Pie chart
+- Reason: There're three different classes. We also want to see the survival rate in each class, so I chose pie chart.
+- Layout: It gives reader a total intuitive to survival rate in different class, so take a bigger place in dashboard.
+- Legend: Orange - Survived; Blue - Not Survived
 
 ---
 
-### Sheet12
+**Class-Survived-fix**
 
-In last chart, I divided the age into four part as described before. From it we can clearly see that female have highest survival among each age, boys tend to have more chance to survive than male adults.
+- Type: Stacked Histogram
+- Reason: There're three distinct variables, and two states, use stacked histogram can clearly see the difference between them, much clear than pie chart.
+- Layout: It gives reader a total intuitive to survival rate in different class, so take a bigger place in dashboard.
+- Legend: Orange - Survived; Blue - Not Survived
 
 ---
 
-**Sheet12-fix**
+**Class-Survived-fix-Survival**
 
-Use a multiple-plots to represent four variables make it better to understand the data.
+- Type: Histogram
+- Reason: There're three distinct variables, and two states, which are complementary to each other. Use stacked histogram seems a little redundant.
+- Layout: It gives reader a total intuitive to survival rate in different class, so take a bigger place in dashboard.
+- Legend: No legend.
+
+### Class-Survived-Sex
+
+- Type: Tree plot
+- Reason: I want to represent the relationship between class, gender and survived or not, so I chose tree plot, use it's area to represent the number of people in each kind.
+- Layout: It gives reader a total intuitive to survival rate relate with class and gender, so I make it bigger than other two plots.
+- Legend: Deep blue - Male, Survived; Blue - Male, Not survived; Crimson - Female, Survived; Red - Female, Not survived
+
+---
+
+**Class-Sex-Survival**
+
+- Type: Histogram
+- Reason: Tree plot seems not so straight as histogram, which can make people be aware of survival rate in each class.
+- Layout: It gives reader a total intuitive to survival rate relate with class and gender, so I make it bigger than other two plots.
+- Legend: No legend.
+
+---
+
+### Age
+
+- Type: Histogram
+- Reason: Histogram can perfectly represent statistic information you want to know, and express the distribution of variable clearly, help understand the whole attribute of the variable.
+- Layout: It gives reader a total intuitive to survival rate relate with age, but I didn't use this dashboard in my story.
+- Legend: No legend.
+
+### Age-Survived
+
+- Type: Histogram
+- Reason: This plot is the histogram of survivors' age, it can perfectly express the distribution of variable clearly, help understand the whole attribute of the variable.
+- Layout: It gives reader a total intuitive to survival rate relate with age, but I didn't use this dashboard in my story.
+- Legend: No legend.
+
+### Age(Group)-Survived
+
+- Type: Histogram
+
+- Reason: I split the age of passengers into four groups: 
+
+  - children: 0 - 14
+  - Youth: 14 - 20
+  - Adult: 20 - 59
+  - Elderly: above 59
+
+  with histogram, it can represent the number of each group of passengers clearly.
+
+- Layout: It gives reader a total intuitive to survival rate and age, so I put it in the top half of the dashboard. 
+
+- Legend: No legend.
+
+### Survived(Age(group))
+
+- Type: Pie chart
+- Reason: There're four different groups. We also want to see the survival rate in each class, so I chose pie chart.
+- Layout: It gives reader a total intuitive to survival rate in different age groups, so take a bigger place in dashboard.
+- Legend: Orange - Survived; Blue - Not Survived
+
+---
+
+**Survived(Age(group))-fix**
+
+- Type: Stacked Histogram
+- Reason: There're four distinct groups, and two states, use stacked histogram can clearly see the difference between them, much clear than pie chart.
+- Layout: It gives reader a total intuitive to survival rate, so take a bigger place in dashboard.
+- Legend: Orange - Survived; Blue - Not Survived
+
+---
+
+**Survived(Age(group))-fix-Survival**
+
+- Type: Histogram
+- Reason: There're four distinct groups, and two states, which are complementary to each other. Use stacked histogram seems a little redundant.
+- Layout: It gives reader a total intuitive to survival rate in different class, so take a bigger place in dashboard.
+- Legend: No legend.
+
+------
+
+### Class-Survived-Sex-Age
+
+- Type: Pie chart
+- Reason: There're four different age groups. We also want to see the survival rate with class and gender, so I split it into four groups, use different colors to represent gender and survival situation, use notation to mark the class.
+- Layout: It gives reader a total intuitive to survival rate with different variables: gender, age and class, so it takes the whole dashboard.
+- Legend: Deep blue - Male, Survived; Blue - Male, Not survived; Crimson - Female, Survived; Red - Female, Not survived
+
+---
+
+**Class-Survived-Sex-Age-fix**
+
+- Type: Pie chart (multi small plots)
+- Reason: There're four different age groups and three other variables, use pie chart can be confused in some extent, so use a multi small plots can express the survival rate of different kind of passengers better, also make it more clear to compare between each other, extract class notation and make it another dimension help keep plot clear.
+- Layout: It gives reader a total intuitive to survival rate with different variables: gender, age and class, so it takes the whole dashboard.
+- Legend: Deep blue - Male, Survived; Blue - Male, Not survived; Crimson - Female, Survived; Red - Female, Not survived
 
 ---
 
